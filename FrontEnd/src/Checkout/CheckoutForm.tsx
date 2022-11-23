@@ -1,4 +1,18 @@
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ProductContext } from '../App.tsx';
+
 export const CheckoutForm = (props: any): JSX.Element => {
+  const [data] = useContext(ProductContext);
+
+  const navigate = useNavigate();
+
+  let total = 0;
+
+  data.forEach(item => {
+    total += item.price * item.quantity;
+  });
+
   return (
     <div className="container">
       <div className="row">
@@ -8,37 +22,19 @@ export const CheckoutForm = (props: any): JSX.Element => {
             <span className="badge badge-secondary badge-pill">3</span>
           </h4>
           <ul className="list-group mb-3">
-            <li className="list-group-item d-flex justify-content-between lh-condensed">
+            {data.map((product: any) => (
+              <li key={ product.id } className="list-group-item d-flex justify-content-between lh-condensed">
               <div>
-                <h6 className="my-0">Product name</h6>
-                <small className="text-muted">Brief description</small>
+                <h6 className="my-0">{product.name} x {product.quantity}</h6>
+                <small className="text-muted">{product.body}</small>
               </div>
-              <span className="text-muted">$12</span>
+              <span className="text-muted"> ${product.price}</span>
             </li>
-            <li className="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 className="my-0">Second product</h6>
-                <small className="text-muted">Brief description</small>
-              </div>
-              <span className="text-muted">$8</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 className="my-0">Third item</h6>
-                <small className="text-muted">Brief description</small>
-              </div>
-              <span className="text-muted">$5</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between bg-light">
-              <div className="text-success">
-                <h6 className="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
-              </div>
-              <span className="text-success">-$5</span>
-            </li>
+            ))}
+            
             <li className="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>$20</strong>
+              <strong>${ total }</strong>
             </li>
           </ul>
 
@@ -208,7 +204,7 @@ export const CheckoutForm = (props: any): JSX.Element => {
               </div>
             </div>
             <hr className="mb-4" />
-            <button className="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            <button className="btn btn-primary btn-lg btn-block" type="submit" onClick={() => navigate('/payment')}>Continue to payment</button>
           </form>
         </div>
       </div>
